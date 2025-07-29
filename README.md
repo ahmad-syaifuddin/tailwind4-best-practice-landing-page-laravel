@@ -34,118 +34,115 @@ resources/views/
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- SEO Meta Tags -->
     <title>@yield('title', config('app.name', 'Laravel'))</title>
     <meta name="description" content="@yield('description', 'Default description')">
     <meta name="keywords" content="@yield('keywords', 'laravel, tailwind, php')">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', config('app.name'))">
     <meta property="og:description" content="@yield('description', 'Default description')">
     
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('title', config('app.name'))">
     <meta property="twitter:description" content="@yield('description', 'Default description')">
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
-    <!-- Custom Styles -->
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased">
-    <!-- Loading Spinner -->
-    <div id="loading" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased">
+    <div id="loading" class="fixed inset-0 bg-white dark:bg-gray-900 z-[100] flex items-center justify-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
     </div>
 
-    <!-- Skip Navigation -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-indigo-600 text-white px-4 py-2 rounded-md z-50">
         Skip to main content
     </a>
 
-    <!-- Navigation -->
-    @include('layouts.components.navigation')
+    <div class="flex flex-col min-h-screen">
+        @include('layouts.components.navigation')
 
-    <!-- Main Content -->
-    <main id="main-content" class="min-h-screen">
-        <!-- Page Header (Optional) -->
-        @hasSection('header')
-            <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    @yield('header')
-                </div>
-            </header>
-        @endif
+        <main id="main-content" class="flex-grow">
+            @hasSection('header')
+                <header class="bg-white dark:bg-gray-800/50 shadow-sm border-b border-gray-200 dark:border-gray-700">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        @yield('header')
+                    </div>
+                </header>
+            @endif
 
-        <!-- Alert Messages -->
-        @if(session('success'))
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-                <div class="bg-green-50 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 rounded-md mb-4">
-                    {{ session('success') }}
-                </div>
+                <x-alert />
             </div>
-        @endif
 
-        @if(session('error'))
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-                <div class="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-md mb-4">
-                    {{ session('error') }}
-                </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {{ $slot ?? '' }}
+                @yield('content')
             </div>
-        @endif
+        </main>
 
-        <!-- Page Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            @yield('content')
-        </div>
-    </main>
+        @include('layouts.components.footer')
+    </div>
 
-    <!-- Footer -->
-    @include('layouts.components.footer')
-
-    <!-- Back to Top Button -->
-    <button id="back-to-top" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 invisible">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 invisible z-50">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
         </svg>
     </button>
 
-    <!-- Custom Scripts -->
     @stack('scripts')
+</body>
+</html>
+```
+
+## 1.1. Buat Layout Tamu (`guest.blade.php`)
+> Layout ini khusus untuk halaman yang tidak memerlukan navigasi utama, seperti login, register, atau lupa password.
+
+### `resources/views/layouts/guest.blade.php`:
+```blade
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>@yield('title', config('app.name', 'Laravel'))</title>
     
-    <script>
-        // Hide loading spinner when page is loaded
-        window.addEventListener('load', () => {
-            document.getElementById('loading').style.display = 'none';
-        });
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+        <div>
+            <a href="/" class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">L</span>
+                </div>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">
+                    {{ config('app.name') }}
+                </span>
+            </a>
+        </div>
 
-        // Back to top functionality
-        const backToTopButton = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 100) {
-                backToTopButton.classList.remove('opacity-0', 'invisible');
-            } else {
-                backToTopButton.classList.add('opacity-0', 'invisible');
-            }
-        });
-
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    </script>
+        <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            {{ $slot ?? '' }}
+            @yield('content')
+        </div>
+    </div>
 </body>
 </html>
 ```
@@ -154,12 +151,13 @@ resources/views/
 
 ## 🧭 2. Komponen Navigation
 
+> Komponen navigasi sekarang menjadi lebih bersih tanpa inline style dan script.
+
 ### `resources/views/layouts/components/navigation.blade.php`:
 ```blade
-<nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700">
+<nav id="main-nav" class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <!-- Logo -->
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2">
                     <div class="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -171,113 +169,34 @@ resources/views/
                 </a>
             </div>
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('home') }}" class="nav-link {{ Request::routeIs('home') ? 'active' : '' }}">
-                    Home
-                </a>
-                <a href="{{ route('about') }}" class="nav-link {{ Request::routeIs('about') ? 'active' : '' }}">
-                    About
-                </a>
-                <a href="{{ route('contact') }}" class="nav-link {{ Request::routeIs('contact') ? 'active' : '' }}">
-                    Contact
-                </a>
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="{{ route('home') }}" class="nav-link {{ Request::routeIs('home') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('about') }}" class="nav-link {{ Request::routeIs('about') ? 'active' : '' }}">About</a>
+                <a href="{{ route('contact') }}" class="nav-link {{ Request::routeIs('contact') ? 'active' : '' }}">Contact</a>
             </div>
 
-            <!-- Dark Mode Toggle & Mobile Menu -->
             <div class="flex items-center space-x-4">
-                <!-- Dark Mode Toggle -->
-                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2L13.09 8.26L20 9L14 14.74L15.18 21.02L10 17.77L4.82 21.02L6 14.74L0 9L6.91 8.26L10 2Z"></path>
-                    </svg>
+                <button id="theme-toggle" type="button" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 5.05A1 1 0 003.636 6.464l.707.707a1 1 0 001.414-1.414l-.707-.707zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                 </button>
 
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-700">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="{{ route('home') }}" class="mobile-nav-link {{ Request::routeIs('home') ? 'active' : '' }}">
-                    Home
-                </a>
-                <a href="{{ route('about') }}" class="mobile-nav-link {{ Request::routeIs('about') ? 'active' : '' }}">
-                    About
-                </a>
-                <a href="{{ route('contact') }}" class="mobile-nav-link {{ Request::routeIs('contact') ? 'active' : '' }}">
-                    Contact
-                </a>
+        <div id="mobile-menu" class="md:hidden hidden py-2">
+            <div class="space-y-1">
+                <a href="{{ route('home') }}" class="mobile-nav-link {{ Request::routeIs('home') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('about') }}" class="mobile-nav-link {{ Request::routeIs('about') ? 'active' : '' }}">About</a>
+                <a href="{{ route('contact') }}" class="mobile-nav-link {{ Request::routeIs('contact') ? 'active' : '' }}">Contact</a>
             </div>
         </div>
     </div>
 </nav>
-
-<style>
-.nav-link {
-    @apply text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200;
-}
-
-.nav-link.active {
-    @apply text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/50;
-}
-
-.mobile-nav-link {
-    @apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200;
-}
-
-.mobile-nav-link.active {
-    @apply text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/50;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-
-    // Dark mode toggle
-    const themeToggle = document.getElementById('theme-toggle');
-    const darkIcon = document.getElementById('theme-toggle-dark-icon');
-    const lightIcon = document.getElementById('theme-toggle-light-icon');
-    
-    // Check theme preference
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        darkIcon.classList.remove('hidden');
-    } else {
-        document.documentElement.classList.remove('dark');
-        lightIcon.classList.remove('hidden');
-    }
-    
-    themeToggle.addEventListener('click', () => {
-        darkIcon.classList.toggle('hidden');
-        lightIcon.classList.toggle('hidden');
-        
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
-    });
-});
-</script>
 ```
 
 ---
@@ -350,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ---
 
-## 📄 4. Contoh Penggunaan di Page
+## 📄 4. Contoh Penggunaan di Page (`home.blade.php`)
 
 ### `resources/views/pages/home.blade.php`:
 ```blade
@@ -429,9 +348,105 @@ document.addEventListener('DOMContentLoaded', function() {
 @endpush
 ```
 
+## 📄 4.1 Contoh Penggunaan di About
+### `resources/views/pages/about.blade.php:`
+```blade
+@extends('layouts.app')
+
+@section('title', 'About Us')
+@section('description', 'Learn more about our company and our mission.')
+@section('keywords', 'about, company, mission')
+
+@section('header')
+    <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            About <span class="text-gradient">Us</span>
+        </h1>
+        <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-300">
+            We are a passionate team dedicated to building high-quality web applications.
+        </p>
+    </div>
+@endsection
+
+@section('content')
+    <div class="space-y-12">
+        <div class="prose dark:prose-invert prose-lg max-w-none">
+            <p>
+                Our journey began with a simple idea: to create software that is not only functional but also beautiful and a joy to use. We leverage the power of the Laravel framework and the flexibility of Tailwind CSS to deliver exceptional digital experiences. Our focus on clean code, performance, and user-centric design sets us apart.
+            </p>
+            
+            <h2 class="text-3xl font-bold mt-12 mb-4">Our Mission</h2>
+            <p>
+                Our mission is to empower businesses and individuals by providing them with robust, scalable, and intuitive web solutions. We believe in the power of technology to solve complex problems and drive progress.
+            </p>
+
+            <blockquote class="border-l-4 border-indigo-500 pl-4 italic">
+                "The best way to predict the future is to invent it."
+            </blockquote>
+        </div>
+    </div>
+@endsection
+```
+
+## 📄 4.2 Contoh Penggunaan di Contact
+### `resources/views/pages/contact.blade.php`:
+```blade
+@extends('layouts.app')
+
+@section('title', 'Contact Us')
+@section('description', 'Get in touch with us for any inquiries.')
+@section('keywords', 'contact, support, inquiry')
+
+@section('header')
+    <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+            Get in <span class="text-gradient">Touch</span>
+        </h1>
+        <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-300">
+            We'd love to hear from you! Please fill out the form below.
+        </p>
+    </div>
+@endsection
+
+@section('content')
+    <div class="max-w-xl mx-auto">
+        <div class="card p-6 sm:p-8">
+            <form action="#" method="POST" class="space-y-6">
+                @csrf
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                    <div class="mt-1">
+                        <input type="text" name="name" id="name" class="input-field" placeholder="John Doe">
+                    </div>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+                    <div class="mt-1">
+                        <input type="email" name="email" id="email" class="input-field" placeholder="you@example.com">
+                    </div>
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+                    <div class="mt-1">
+                        <textarea rows="4" name="message" id="message" class="input-field" placeholder="Your message here..."></textarea>
+                    </div>
+                </div>
+                <div>
+                    <x-button type="submit" class="w-full justify-center">
+                        Send Message
+                    </x-button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+```
+
 ---
 
 ## 🔧 5. Update CSS App untuk Styling Tambahan
+
+> File app.css sekarang berisi semua custom styling, termasuk yang sebelumnya ada di navigation.blade.php
 
 ### Tambahkan ke `resources/css/app.css`:
 ```css
@@ -513,9 +528,135 @@ body {
 }
 ```
 
+## 6. JavaScript Terpusat (`app.js`)
+
+> Semua fungsionalitas JavaScript (loading, back-to-top, dark mode, mobile menu) kini berada di satu tempat.
+
+### `resources/js/app.js:`
+```js
+import './bootstrap';
+
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Loading Spinner ---
+    const loadingEl = document.getElementById('loading');
+    if (loadingEl) {
+        window.addEventListener('load', () => {
+            loadingEl.style.display = 'none';
+        });
+    }
+
+    // --- Back to Top Button ---
+    const backToTopButton = document.getElementById('back-to-top');
+    if (backToTopButton) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+            } else {
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // --- Dark Mode Toggle ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            themeToggleLightIcon?.classList.remove('hidden');
+            themeToggleDarkIcon?.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon?.classList.remove('hidden');
+            themeToggleLightIcon?.classList.add('hidden');
+        }
+    };
+
+    const currentTheme = localStorage.getItem('color-theme') || 
+                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(currentTheme);
+
+    themeToggleBtn?.addEventListener('click', () => {
+        const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+        localStorage.setItem('color-theme', newTheme);
+        applyTheme(newTheme);
+    });
+    
+    // --- Mobile Menu Toggle ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton?.addEventListener('click', () => {
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        mobileMenu?.classList.toggle('hidden');
+    });
+}); 
+```
 ---
 
-## 📦 6. Route Configuration
+## Komponen Blade Reusable 
+
+## 1. Komponen Alert blade
+> Membuat komponen Blade untuk elemen UI yang sering digunakan seperti alert dan button.
+
+### `resources/views/components/alert.blade.php:`
+```blade
+@if (session('success'))
+    <div class="bg-green-100 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 rounded-lg mb-4" role="alert">
+        <strong class="font-bold">Success!</strong>
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg mb-4" role="alert">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="bg-red-100 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-lg mb-4" role="alert">
+        <strong class="font-bold">Validation Error!</strong>
+        <ul class="mt-2 list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif 
+```
+## 2. Komponen Button blade
+
+> Membuat komponen Blade untuk elemen UI yang sering digunakan seperti alert dan button.
+
+### `resources/views/components/button.blade.php:`
+```blade
+@props([
+    'variant' => 'primary', // 'primary' or 'secondary'
+    'type' => 'button'
+])
+
+@php
+$classes = [
+    'primary' => 'btn-primary',
+    'secondary' => 'btn-secondary',
+][$variant];
+@endphp
+
+<button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
+    {{ $slot }}
+</button>
+```
+
+## 📦 7. Route Configuration
 
 ### Tambahkan ke `routes/web.php`:
 ```php
@@ -538,7 +679,7 @@ Route::get('/contact', function () {
 
 ---
 
-## ✨ 7. Fitur Tambahan
+## ✨ 8. Fitur Tambahan
 
 ### Dark Mode Support
 Layout ini sudah include dark mode toggle yang akan:
@@ -561,7 +702,7 @@ Layout ini sudah include dark mode toggle yang akan:
 
 ---
 
-## 🎯 8. Tips Penggunaan
+## 🎯 9. Tips Penggunaan
 
 ### Menggunakan Layout
 ```blade
@@ -630,7 +771,7 @@ Penggunaan:
 
 ---
 
-## 🚀 9. Customization Options
+## 🚀 10. Customization Options
 
 ### Mengubah Color Scheme
 Edit `tailwind.config.js`:
@@ -693,7 +834,7 @@ export default {
 
 ---
 
-## 🔧 10. Troubleshooting Layout
+## 🔧 11. Troubleshooting Layout
 
 ### Layout tidak muncul
 1. Pastikan route menggunakan `return view('pages.home')` bukan `welcome`
@@ -713,7 +854,7 @@ export default {
 
 ---
 
-## 📱 11. Mobile Responsiveness
+## 📱 12. Mobile Responsiveness
 
 Layout ini sudah responsive dengan breakpoints:
 - `sm:` - Small screens (640px+)
@@ -734,7 +875,7 @@ npm run dev
 
 ---
 
-## 🎨 12. Design System
+## 🎨 13. Design System
 
 ### Typography Scale
 ```css
@@ -766,7 +907,7 @@ npm run dev
 
 ---
 
-## 📚 13. Next Steps
+## 📚 14. Next Steps
 
 1. **Buat Component Library**: Kembangkan komponen reusable
 2. **Add Authentication**: Integrate dengan Laravel Breeze/Jetstream
@@ -777,7 +918,7 @@ npm run dev
 
 ---
 
-## 🤝 14. Contributing
+## 🤝 15. Contributing
 
 Untuk berkontribusi pada layout ini:
 
@@ -789,7 +930,7 @@ Untuk berkontribusi pada layout ini:
 
 ---
 
-## 📖 15. Resources
+## 📖 16. Resources
 
 - [Laravel Documentation](https://laravel.com/docs)
 - [Tailwind CSS v4 Docs](https://tailwindcss.com/docs)
