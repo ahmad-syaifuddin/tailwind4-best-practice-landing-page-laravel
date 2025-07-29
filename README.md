@@ -438,6 +438,9 @@ document.addEventListener('DOMContentLoaded', function() {
 ```css
 @import 'tailwindcss';
 
+/* Override dark mode behavior untuk class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Custom Components */
 @layer components {
     .btn-primary {
