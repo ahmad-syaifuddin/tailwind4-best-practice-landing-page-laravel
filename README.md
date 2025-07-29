@@ -356,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
 ```blade
 @extends('layouts.app')
 
-@section('title', 'Home - Laravel App')
 @section('description', 'Welcome to our modern Laravel application built with Tailwind CSS v4')
 @section('keywords', 'laravel, tailwind, home, modern')
 
