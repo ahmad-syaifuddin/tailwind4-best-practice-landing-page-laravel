@@ -437,59 +437,79 @@ document.addEventListener('DOMContentLoaded', function() {
 ```css
 @import 'tailwindcss';
 
-/* Override dark mode behavior untuk class-based dark mode */
+/* Override dark mode behavior (Tailwind v4 syntax) */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Base Styles */
+body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased;
+}
+
+/* Smooth transitions for all elements */
+*, ::before, ::after {
+    @apply transition-colors duration-200;
+}
 
 /* Custom Components */
 @layer components {
+    /* Buttons */
     .btn-primary {
-        @apply px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
+        @apply inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
     }
-    
     .btn-secondary {
-        @apply px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+        @apply inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
     }
     
+    /* Cards */
     .card {
-        @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden;
+        @apply bg-white dark:bg-gray-800/50 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden backdrop-blur-lg;
     }
     
+    /* Form Inputs */
     .input-field {
-        @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+        @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent;
+    }
+
+    /* Navigation Links */
+    .nav-link {
+        @apply text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium relative;
+    }
+    .nav-link.active {
+        @apply text-indigo-600 dark:text-indigo-400;
+    }
+    .nav-link.active::after {
+        @apply content-[''] absolute bottom-0 left-3 right-3 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full;
+    }
+
+    /* Mobile Navigation Links */
+    .mobile-nav-link {
+        @apply block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700;
+    }
+    .mobile-nav-link.active {
+        @apply text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-gray-700;
     }
 }
 
 /* Custom Utilities */
 @layer utilities {
     .text-gradient {
-        @apply bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent;
     }
-    
-    .shadow-glow {
-        box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
-    }
-}
-
-/* Smooth transitions */
-* {
-    @apply transition-colors duration-200;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
-
 ::-webkit-scrollbar-track {
     @apply bg-gray-100 dark:bg-gray-800;
 }
-
 ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500 dark:bg-gray-500;
+    @apply bg-gray-400 dark:bg-gray-500;
 }
 ```
 
