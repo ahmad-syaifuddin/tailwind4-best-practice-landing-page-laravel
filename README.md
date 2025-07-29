@@ -1,4 +1,4 @@
-# 🎨 Laravel Layout Best Practice - Tailwind CSS v4
+# 🎨 Laravel Layout Best Practice (Landing Page) - Tailwind CSS v4
 
 ## 📁 Struktur Layout yang Direkomendasikan
 
