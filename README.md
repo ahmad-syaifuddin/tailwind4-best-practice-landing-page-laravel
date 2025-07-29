@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <ul class="space-y-2 text-gray-400">
                     <li>📧 hello@example.com</li>
                     <li>📱 +62 123 456 789</li>
-                    <li>📍 Jakarta, Indonesia</li>
+                    <li>📍 Barito Kuala, Indonesia</li>
                 </ul>
             </div>
         </div>
